@@ -140,11 +140,10 @@ async function rebuildDB() {
     await dropTables();
     await createTables();
     await createInitialUsers();
+    await testDB()
   } catch (error) {
     console.error(error);
-  } finally {
-    client.end();
-  }
+  } 
 }
 
 
@@ -162,10 +161,14 @@ async function testDB() {
   }
 }
 
-testDB();
-
-
-rebuildDB()
-  .then(testDB)
-  .catch(console.error)
-  .finally(() => client.end());
+async function init () {
+  try {
+    await rebuildDB();
+    await testDB();
+  } catch (error) {
+    console.error(error)
+  } finally {
+    client.end();
+  }
+}
+init();
