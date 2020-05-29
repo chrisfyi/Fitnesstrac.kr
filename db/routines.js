@@ -2,7 +2,7 @@ async function createRoutines({
     creatorId, 
     public,
     name, 
-    goal
+    goal,
   }) {
     try {
   
@@ -11,33 +11,58 @@ async function createRoutines({
     }
   }
 
+  async function updateRoutines(id, {
+    public,
+    name,
+    goal,
+  }) {
+    try {
+  
+    } catch (error) {
+      throw error;
+    }
+  }
 
-// async function updateUser(id, fields = {}) {
-//     // build the set string
-//     const setString = Object.keys(fields).map(
-//       (key, index) => `"${ key }"=$${ index + 1 }`
-//     ).join(', ');
-  
-//     // return early if this is called without fields
-//     if (setString.length === 0) {
-//       return;
-//     }
-  
-//     try {
-//       const result = await client.query(`
-//         UPDATE users
-//         SET ${ setString }
-//         WHERE id=${ id }
-//         RETURNING *;
-//       `, Object.values(fields));
-  
-//       return result;
-//     } catch (error) {
-//       throw error;
-//     }
-//   }
+  async function getAllRoutines() {
+    const { rows } = await client.query(`SELECT id, username FROM users;`);
 
+    return rows;
+}
+
+async function getPublicRoutines() {
+  const { rows } = await client.query(`SELECT public, true FROM routines;`);
+
+  return rows;
+}
+
+async function getAllRoutinesbyUser(userId) {
+  try {
+    const { rows } = client.query(`
+      SELECT * FROM posts
+      WHERE "authorId"=${ userId };
+    `);
+
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getPublicRoutinesbyUser(userId) {
+  try {
+    const { rows } = client.query(`
+      SELECT * FROM posts
+      WHERE "authorId"=${ userId };
+    `);
+
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+}
 
 module.exports = {
     createRoutines,
+    updateRoutines,
+    getAllRoutines,
  }
