@@ -22,7 +22,7 @@ async function updateActivity(id, {
 }
 
 async function getAllActivity() {
-  const { rows } = await client.query(`SELECT id, username FROM users;`);
+  const { rows } = await client.query(`SELECT * FROM activities;`);
 
   return rows;
 }

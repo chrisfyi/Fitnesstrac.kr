@@ -24,45 +24,49 @@ async function createRoutines({
   }
 
   async function getAllRoutines() {
-    const { rows } = await client.query(`SELECT id, username FROM users;`);
+    const { rows } = await client.query(`SELECT * FROM routines;`);
 
     return rows;
 }
 
-async function getPublicRoutines() {
+async function getAllPublicRoutines() {
   const { rows } = await client.query(`SELECT public, true FROM routines;`);
 
   return rows;
 }
 
-async function getAllRoutinesbyUser(userId) {
-  try {
-    const { rows } = client.query(`
-      SELECT * FROM posts
-      WHERE "authorId"=${ userId };
-    `);
+// IN PROGRESS
 
-    return rows;
-  } catch (error) {
-    throw error;
-  }
-}
+// async function getAllRoutinesbyUser(userId) {
+//   try {
+//     const { rows } = client.query(`
+//       SELECT * FROM posts
+//       WHERE "authorId"=${ userId };
+//     `);
 
-async function getPublicRoutinesbyUser(userId) {
-  try {
-    const { rows } = client.query(`
-      SELECT * FROM posts
-      WHERE "authorId"=${ userId };
-    `);
+//     return rows;
+//   } catch (error) {
+//     throw error;
+//   }
+// }
 
-    return rows;
-  } catch (error) {
-    throw error;
-  }
-}
+// async function getPublicRoutinesbyUser(userId) {
+//   try {
+//     const { rows } = client.query(`
+//       SELECT * FROM posts
+//       WHERE "authorId"=${ userId };
+//     `);
+
+//     return rows;
+//   } catch (error) {
+//     throw error;
+//   }
+// }
 
 module.exports = {
     createRoutines,
     updateRoutines,
     getAllRoutines,
+    getAllRoutinesbyUser,
+    getAllPublicRoutines,
  }

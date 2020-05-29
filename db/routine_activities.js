@@ -23,14 +23,14 @@ async function createRoutineActivity({
   }
 
   async function getAllRoutineActivity() {
-    const { rows } = await client.query(`SELECT id, username FROM users;`);
+    const { rows } = await client.query(`SELECT * FROM routine_activities;`);
 
     return rows;
 }
 
 
 module.exports = {
-    createRoutineActivities,
+    createRoutineActivity,
     updateRoutineActivity,
     getAllRoutineActivity,
  }

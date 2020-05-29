@@ -1,6 +1,5 @@
 const {
     client,
-    
   } = require('./index');
 
 const {
@@ -84,21 +83,55 @@ async function dropTables() {
     }
   }
 
-  // async function createInitialActivities() {
-  //   try {
-  //     const [albert, sandra, glamgal] = await getAllUsers();
-  
-  //     await create({
-  //       authorId: albert.id,
-  //       title: "First Post",
-  //       content: "This is my first post. I hope I love writing blogs as much as I love writing them."
-  //     });
-  
-  //     // a couple more
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
+  //IN PROGRESS
+
+// async function createInitialActivities() {
+//   try {
+//     const [albert, sandra, glamgal] = await getAllUsers();
+
+//     await create({
+//       authorId: albert.id,
+//       title: "First Post",
+//       content: "This is my first post. I hope I love writing blogs as much as I love writing them."
+//     });
+
+//     // a couple more
+//   } catch (error) {
+//     throw error;
+//   }
+// }
+
+// async function createInitialRoutines() {
+//   try {
+//     const [albert, sandra, glamgal] = await getAllUsers();
+
+//     await create({
+//       authorId: albert.id,
+//       title: "First Post",
+//       content: "This is my first post. I hope I love writing blogs as much as I love writing them."
+//     });
+
+//     // a couple more
+//   } catch (error) {
+//     throw error;
+//   }
+// }
+
+// async function createInitialRoutineActivities() {
+//   try {
+//     const [albert, sandra, glamgal] = await getAllUsers();
+
+//     await create({
+//       authorId: albert.id,
+//       title: "First Post",
+//       content: "This is my first post. I hope I love writing blogs as much as I love writing them."
+//     });
+
+//     // a couple more
+//   } catch (error) {
+//     throw error;
+//   }
+// }
     
 async function rebuildDB() {
   try {
