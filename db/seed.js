@@ -1,7 +1,12 @@
 const {
     client,
-    // getAllUsers // new
+    
   } = require('./index');
+
+const {
+  createUser,
+  getAllUsers,
+} = require('./users')
   
 
 
@@ -62,6 +67,38 @@ async function dropTables() {
     }
   }
 
+  async function createInitialUsers() {
+    try {
+      console.log("Starting to create users...");
+  
+     await createUser({ username: 'albert', password: 'bertie99' });
+     await createUser({ username: 'sandra', password: '2sandy4me' });
+     await createUser({ username: 'glamgal', password: 'soglam' });
+  
+     
+  
+      console.log("Finished creating users!");
+    } catch(error) {
+      console.error("Error creating users!");
+      throw error;
+    }
+  }
+
+  // async function createInitialActivities() {
+  //   try {
+  //     const [albert, sandra, glamgal] = await getAllUsers();
+  
+  //     await create({
+  //       authorId: albert.id,
+  //       title: "First Post",
+  //       content: "This is my first post. I hope I love writing blogs as much as I love writing them."
+  //     });
+  
+  //     // a couple more
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
     
 async function rebuildDB() {
   try {
@@ -69,6 +106,7 @@ async function rebuildDB() {
 
     await dropTables();
     await createTables();
+    await createInitialUsers();
   } catch (error) {
     console.error(error);
   } finally {
@@ -81,8 +119,8 @@ async function testDB() {
   try {
     console.log("Starting to test database...");
 
-    // const users = await getAllUsers();
-    // console.log("getAllUsers:", users);
+    const users = await getAllUsers();
+    console.log("getAllUsers:", users);
 
     console.log("Finished database tests!");
   } catch (error) {
