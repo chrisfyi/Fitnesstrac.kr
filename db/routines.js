@@ -49,15 +49,17 @@ async function getAllPublicRoutines() {
 // IN PROGRESS
 
 async function getAllRoutinesbyUser(username) {
+  console.log('<<<<<<<<<',  username)
   try {
     const { rows } = client.query(`
-    SELECT routines.name, routines."creatorId", activities.name, activities.description
-    FROM routines 
-    JOIN users ON routines."creatorId" = users.id;
+    SELECT routines.name, routines.id, routines."creatorId", activities.name, activities.description
+    FROM routines
+    JOIN users ON routines."creatorId" = users.id
     JOIN routine_activities ON routine_activities."routineId" = routines.id
     JOIN activities ON routine_activities."activityId" = activities.id
     WHERE users.id = 1;
     `);
+  
 
     return rows;
   } catch (error) {

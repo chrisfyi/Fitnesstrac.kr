@@ -15,7 +15,8 @@ const {
 
 const {
   createRoutines,
-  getAllRoutines
+  getAllRoutines,
+  getAllRoutinesbyUser,
 } = require('./routines')
 
 const {
@@ -177,14 +178,14 @@ async function createInitialRoutineActivities() {
 
     await createRoutineActivity({
       routineId,
-      activityId,
+      activityId: 2,
       count: 10,
       duration: 10000 
     });
 
     await createRoutineActivity({
       routineId,
-      activityId,
+      activityId: 3,
       count: 10,
       duration: 10000 
     });
@@ -204,7 +205,6 @@ async function rebuildDB() {
     await createInitialActivities();
     await createInitialRoutines();
     await createInitialRoutineActivities();
-    await testDB()
   } catch (error) {
     console.error(error);
   } 
@@ -227,7 +227,11 @@ async function testDB() {
     const routineActivity = await getAllRoutineActivity();
     console.log("getAllRoutineActivity:", routineActivity)
 
+    const routinebyUser = await getAllRoutinesbyUser('albert');
+    console.log('getRoutinesbyUser', routinebyUser)
+
     console.log("Finished database tests!");
+
   } catch (error) {
     console.error("Error testing database!");
     throw error;
