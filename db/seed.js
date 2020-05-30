@@ -6,6 +6,22 @@ const {
   createUser,
   getAllUsers,
 } = require('./users')
+
+const {
+  createActivity,
+  getAllActivity,
+
+} = require('./activities')
+
+const {
+  createRoutines,
+  getAllRoutines
+} = require('./routines')
+
+const {
+  createRoutineActivity,
+  getAllRoutineActivity,
+} = require('./routine_activities')
   
 
 
@@ -85,53 +101,98 @@ async function dropTables() {
 
   //IN PROGRESS
 
-// async function createInitialActivities() {
-//   try {
-//     const [albert, sandra, glamgal] = await getAllUsers();
+  async function createInitialActivities() {
+    try {
+      // const [ name ] = await getAllActivity();
+  
+      await createActivity({
+        name: "Pushups",
+        description: "This is my first activity."
+      });
+      await createActivity({
+        name: "Situps" ,
+        description: "This is my second activity."
+      });
+      await createActivity({
+        name: "Jumping Jacks" ,
+        description: "This is my third activity."
+      });
+  
+    } catch (error) {
+        console.error('Error Creating Activities!')
+      throw error;
+    }
+  }
 
-//     await create({
-//       authorId: albert.id,
-//       title: "First Post",
-//       content: "This is my first post. I hope I love writing blogs as much as I love writing them."
-//     });
+async function createInitialRoutines() {
+  try {
+    // const [ id ] = await getAllRoutines();
+    const [ user ] = await getAllUsers();
 
-//     // a couple more
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+    console.log('>>>>>>',user)
+    await createRoutines({
+      creatorId: user.id,
+      public: true,
+      name: "`First Routine`",
+      goal: "This is my goal."
+    });
 
-// async function createInitialRoutines() {
-//   try {
-//     const [albert, sandra, glamgal] = await getAllUsers();
 
-//     await create({
-//       authorId: albert.id,
-//       title: "First Post",
-//       content: "This is my first post. I hope I love writing blogs as much as I love writing them."
-//     });
+    await createRoutines({
+      creatorId: user.id,
+      public: false,
+      name: "`Second Routine`",
+      goal: "This is my goal."
+    });
 
-//     // a couple more
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+    await createRoutines({
+      creatorId: user.id,
+      public: true,
+      name: "`Third Routine`",
+      goal: "This is my goal."
+    });
 
-// async function createInitialRoutineActivities() {
-//   try {
-//     const [albert, sandra, glamgal] = await getAllUsers();
+    // a couple more
+  } catch (error) {
+    throw error;
+  }
+}
 
-//     await create({
-//       authorId: albert.id,
-//       title: "First Post",
-//       content: "This is my first post. I hope I love writing blogs as much as I love writing them."
-//     });
+async function createInitialRoutineActivities() {
+  try {
+    
+    // const [routineId, activityId ] = await getAllRoutineActivity();
+    const [{ id:routineId }] = await getAllRoutines()
+    const [{ id:activityId }] = await getAllActivity();
+    
+    
+    // console.log('<<<<<<<<<<<<<<<<<<',routineId)
+    // console.log('>>>>>>>>>>>>>>>>>>>',activityId)
+    await createRoutineActivity({
+      routineId,
+      activityId,
+      count: 10,
+      duration: 10000 
+    });
 
-//     // a couple more
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+    await createRoutineActivity({
+      routineId,
+      activityId,
+      count: 10,
+      duration: 10000 
+    });
+
+    await createRoutineActivity({
+      routineId,
+      activityId,
+      count: 10,
+      duration: 10000 
+    });
+    // a couple more
+  } catch (error) {
+    throw error;
+  }
+}
     
 async function rebuildDB() {
   try {
@@ -140,6 +201,9 @@ async function rebuildDB() {
     await dropTables();
     await createTables();
     await createInitialUsers();
+    await createInitialActivities();
+    await createInitialRoutines();
+    await createInitialRoutineActivities();
     await testDB()
   } catch (error) {
     console.error(error);
@@ -153,6 +217,15 @@ async function testDB() {
 
     const users = await getAllUsers();
     console.log("getAllUsers:", users);
+
+    const activities = await getAllActivity();
+    console.log("getAllActivity:", activities)
+
+    const routines = await getAllRoutines();
+    console.log("getAllRoutines:", routines)
+
+    const routineActivity = await getAllRoutineActivity();
+    console.log("getAllRoutineActivity:", routineActivity)
 
     console.log("Finished database tests!");
   } catch (error) {
