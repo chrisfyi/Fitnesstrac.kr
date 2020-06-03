@@ -59,18 +59,29 @@ async function getAllPublicRoutines() {
 
 // IN PROGRESS
 
-async function getAllRoutinesbyUser(username) {
+async function getAllRoutinesbyUser({username}) {
   
   try {
-    // const user  = getUserbyUsername(username)
-    
+    const user  = await getUserbyUsername(username)
+
     // Find User, Find Routines, Find activities for routines
     const { rows } = await client.query(`
     SELECT * 
     FROM routines
-    JOIN routine_activities ON routine_activities."routineId" = routines.id
-    WHERE routines."creatorId" = 1;
-    `);
+    WHERE routines."creatorId" = $1;
+    `, [user.id]);
+
+    for(let routine of rows) {
+
+      const {rows: activities} = await client.query(`
+      SELECT *
+      FROM activities
+      JOIN routine_activities ON routine_activities."activityId" = activities.id
+      WHERE "routineId" = $1
+      `, [routine.id])
+      routine.activities = activities
+    }
+   
 
   
     return rows;
@@ -92,7 +103,7 @@ async function getPublicRoutinesbyUser(username) {
     const { rows } = await client.query(`
     SELECT * 
     FROM routines
-    JOIN users ON users.id = routines."creatorId"
+    WHERE routines."creatorId" = 
     WHERE public = true AND "creatorId" >= 1 ; 
      
       `);

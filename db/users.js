@@ -36,10 +36,14 @@ async function getAllUsers() {
         return rows;
 }
 
-async function getUserbyUsername(){
-      const { rows } = await client.query(` SELECT username FROM users;`)
+async function getUserbyUsername(username){
+      const { rows: [user] } = await client.query(` 
+      SELECT *
+      FROM users
+      WHERE username = $1;
+      `, [username])
 
-      return rows;
+      return user;
 }
 
 
