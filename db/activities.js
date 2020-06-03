@@ -25,17 +25,21 @@ async function createActivity({
 // description,
 // }) {
 // try {
+//   const activityupdate = await client.query(`
+//   UPDATE name`)
 
 // } catch (error) {
 //   throw error;
 // }
 // }
 
+
 async function getAllActivity() {
 const { rows } = await client.query(`SELECT * FROM activities;`);
 
 return rows;
 }
+
 
 
 module.exports = {

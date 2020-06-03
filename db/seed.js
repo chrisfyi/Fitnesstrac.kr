@@ -228,7 +228,7 @@ async function testDB() {
     console.log("getAllRoutineActivity:", routineActivity)
 
     const routinebyUser = await getAllRoutinesbyUser('albert');
-    console.log('getRoutinesbyUser', routinebyUser)
+    console.log('getAllRoutinesbyUser', routinebyUser)
 
     console.log("Finished database tests!");
 
