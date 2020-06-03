@@ -62,44 +62,50 @@ async function getAllPublicRoutines() {
 async function getAllRoutinesbyUser(username) {
   
   try {
-    const user  = getUserbyUsername(username)
+    // const user  = getUserbyUsername(username)
     
     // Find User, Find Routines, Find activities for routines
     const { rows } = await client.query(`
     SELECT * 
     FROM routines
-    WHERE routines."creatorId" = user
-    
     JOIN routine_activities ON routine_activities."routineId" = routines.id
-    
-    WHERE users.id = 1;
+    WHERE routines."creatorId" = 1;
     `);
-    
-    getActivitiesbyRoutineId.forEach()
 
+  
     return rows;
   } catch (error) {
     console.error(error);
   }
 }
 
+// this was in the function above
+// JOIN routine_activities ON routine_activities."routineId" = routines.id
+// WHERE users.id = 1;
+
 async function getPublicRoutinesbyUser(username) {
   
-  const publicRoutines = getAllPublicRoutines()
-  
+  // const publicRoutines = getAllPublicRoutines()
+  //  get public routines, get routines by user
   console.log(username)
   try {
     const { rows } = await client.query(`
-      SELECT "creatorId" , public = true FROM routines ;
-          `);
+    SELECT * 
+    FROM routines
+    JOIN users ON users.id = routines."creatorId"
+    WHERE public = true AND "creatorId" >= 1 ; 
+     
+      `);
 
-          (await publicRoutines).forEach
-    
+      
+
     return rows;
   } catch (error) {
     throw error;
   }
 }
+
+// 
 
 // async function updateUser(id, fields = {}) {
 //   // build the set string
