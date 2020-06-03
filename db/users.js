@@ -36,10 +36,17 @@ async function getAllUsers() {
         return rows;
 }
 
+async function getUserbyUsername(){
+      const { rows } = await client.query(` SELECT username FROM users;`)
+
+      return rows;
+}
+
 
 
 
 module.exports = {
    createUser,
    getAllUsers,
+   getUserbyUsername
 }

@@ -40,10 +40,17 @@ const { rows } = await client.query(`SELECT * FROM activities;`);
 return rows;
 }
 
+async function getActivitiesbyRoutineId(){
+  // join routine activities to activities.id
+  const { rows } = await client.query(` SELECT "activityId" FROM routine_activities`)
+
+  return rows;
+}
 
 
 module.exports = {
   createActivity,
   // updateActivity,
   getAllActivity,
+  getActivitiesbyRoutineId
 }

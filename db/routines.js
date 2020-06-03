@@ -2,6 +2,14 @@ const {
   client,
 } = require('./index');
 
+const {
+  getUserbyUsername
+} = require('./users')
+
+const {
+  getActivitiesbyRoutineId,
+} = require('./activities')
+
 async function createRoutines({
     creatorId, 
     public,
@@ -41,7 +49,10 @@ async function createRoutines({
 }
 
 async function getAllPublicRoutines() {
-  const { rows } = await client.query(`SELECT public, true FROM routines;`);
+  const { rows } = await client.query(`
+      SELECT * FROM routines
+      WHERE public = true
+    ;`);
 
   return rows;
 }
@@ -49,31 +60,41 @@ async function getAllPublicRoutines() {
 // IN PROGRESS
 
 async function getAllRoutinesbyUser(username) {
-  console.log('<<<<<<<<<',  username)
+  
   try {
-    const { rows } = client.query(`
-    SELECT routines.name, routines.id, routines."creatorId", activities.name, activities.description
+    const user  = getUserbyUsername(username)
+    
+    // Find User, Find Routines, Find activities for routines
+    const { rows } = await client.query(`
+    SELECT * 
     FROM routines
-    JOIN users ON routines."creatorId" = users.id
+    WHERE routines."creatorId" = user
+    
     JOIN routine_activities ON routine_activities."routineId" = routines.id
-    JOIN activities ON routine_activities."activityId" = activities.id
+    
     WHERE users.id = 1;
     `);
-  
+    
+    getActivitiesbyRoutineId.forEach()
 
     return rows;
   } catch (error) {
-    throw error;
+    console.error(error);
   }
 }
 
 async function getPublicRoutinesbyUser(username) {
+  
+  const publicRoutines = getAllPublicRoutines()
+  
+  console.log(username)
   try {
-    const { rows } = client.query(`
-      SELECT public, true FROM routines
-      WHERE "creatorId"=${ username };
-    `);
+    const { rows } = await client.query(`
+      SELECT "creatorId" , public = true FROM routines ;
+          `);
 
+          (await publicRoutines).forEach
+    
     return rows;
   } catch (error) {
     throw error;

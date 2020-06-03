@@ -17,6 +17,7 @@ const {
   createRoutines,
   getAllRoutines,
   getAllRoutinesbyUser,
+  getPublicRoutinesbyUser,
 } = require('./routines')
 
 const {
@@ -227,8 +228,11 @@ async function testDB() {
     const routineActivity = await getAllRoutineActivity();
     console.log("getAllRoutineActivity:", routineActivity)
 
-    const routinebyUser = await getAllRoutinesbyUser('albert');
-    console.log('getAllRoutinesbyUser', routinebyUser)
+    // const routinebyUser = await getAllRoutinesbyUser('albert');
+    // console.log('getAllRoutinesbyUser', routinebyUser)
+
+    const publicRoutinebyUser = await getPublicRoutinesbyUser('albert');
+    console.log('getPublicRoutinesbyUser', publicRoutinebyUser)
 
     console.log("Finished database tests!");
 
