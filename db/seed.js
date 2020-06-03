@@ -228,8 +228,8 @@ async function testDB() {
     const routineActivity = await getAllRoutineActivity();
     console.log("getAllRoutineActivity:", routineActivity)
 
-    const routinebyUser = await getAllRoutinesbyUser({username: 'albert'});
-    console.log('getAllRoutinesbyUser', routinebyUser)
+    const routinesbyUser = await getAllRoutinesbyUser({username: 'albert'});
+    console.log('getAllRoutinesbyUser', routinesbyUser)
 
     // const publicRoutinebyUser = await getPublicRoutinesbyUser('albert');
     // console.log('getPublicRoutinesbyUser', publicRoutinebyUser)
