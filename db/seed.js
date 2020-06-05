@@ -23,6 +23,7 @@ const {
   getAllPublicRoutines,
   getPublicRoutinesbyUser,
   getPublicRoutinesbyActivity,
+  updateRoutine
 } = require('./routines')
 
 const {
@@ -252,6 +253,15 @@ async function testDB() {
 
     const publicRoutinebyActivity = await getPublicRoutinesbyActivity(1);
     console.log('getPublicRoutinesbyActivity: ', util.inspect(publicRoutinebyActivity, {depth: null}))
+
+    const updateRoutines = await updateRoutine({
+      id: 1,
+      creatorId: 2,
+      public: true,
+      name: "`Fifth Routine`",
+      goal: "This is my goal."
+    });
+    console.log('updateRoutine', updateRoutines)
 
 
 

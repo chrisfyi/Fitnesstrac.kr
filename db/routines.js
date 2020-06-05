@@ -46,6 +46,17 @@ async function createRoutines({
   async function getAllRoutines() {
     const { rows } = await client.query(`SELECT * FROM routines;`);
 
+    for(let routine of rows) {
+
+      const {rows: activities} = await client.query(`
+      SELECT *
+      FROM activities
+      JOIN routine_activities ON routine_activities."activityId" = activities.id
+      WHERE "routineId" = $1
+      `, [routine.id])
+      routine.activities = activities
+    }
+
     return rows;
 }
 
@@ -54,6 +65,17 @@ async function getAllPublicRoutines() {
       SELECT * FROM routines
       WHERE public = true
     ;`);
+
+    for(let routine of rows) {
+
+      const {rows: activities} = await client.query(`
+      SELECT *
+      FROM activities
+      JOIN routine_activities ON routine_activities."activityId" = activities.id
+      WHERE "routineId" = $1
+      `, [routine.id])
+      routine.activities = activities
+    }
 
   return rows;
 }
@@ -151,30 +173,37 @@ async function getPublicRoutinesbyActivity(id) {
   }
 }
 
-// async function updateUser(id, fields = {}) {
-//   // build the set string
-//   const setString = Object.keys(fields).map(
-//     (key, index) => `"${ key }"=$${ index + 1 }`
-//   ).join(', ');
 
-//   // return early if this is called without fields
-//   if (setString.length === 0) {
-//     return;
-//   }
 
-//   try {
-//     const result = await client.query(`
-//       UPDATE users
-//       SET ${ setString }
-//       WHERE id=${ id }
-//       RETURNING *;
-//     `, Object.values(fields));
+async function updateRoutine(fields = {}) {
+  // build the set string
+const id = fields.id
+delete fields.id
 
-//     return result;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+  const setString = Object.keys(fields).map(
+    (key, index) => `"${ key }"=$${ index + 1 }`
+  ).join(', ');
+  console.log(fields)
+
+  console.log(setString)
+  // return early if this is called without fields
+  if (setString.length === 0) {
+    return;
+  }
+
+  try {
+    const {rows: result} = await client.query(`
+      UPDATE routines
+      SET ${ setString }
+      WHERE id=${ id }
+      RETURNING *;
+    `, Object.values(fields));
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
 
 module.exports = {
     createRoutines,
@@ -183,5 +212,6 @@ module.exports = {
     getAllRoutinesbyUser,
     getAllPublicRoutines,
     getPublicRoutinesbyUser,
-    getPublicRoutinesbyActivity
+    getPublicRoutinesbyActivity,
+    updateRoutine
  }
