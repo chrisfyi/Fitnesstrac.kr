@@ -10,6 +10,7 @@ const {
 const {
   createActivity,
   getAllActivity,
+  updateActivity,
 
 } = require('./activities')
 
@@ -17,7 +18,9 @@ const {
   createRoutines,
   getAllRoutines,
   getAllRoutinesbyUser,
+  getAllPublicRoutines,
   getPublicRoutinesbyUser,
+  getPublicRoutinesbyActivity,
 } = require('./routines')
 
 const {
@@ -216,23 +219,39 @@ async function testDB() {
   try {
     console.log("Starting to test database...");
 
-    const users = await getAllUsers();
-    console.log("getAllUsers:", users);
+    // const users = await getAllUsers();
+    // console.log("getAllUsers:", users);
 
-    const activities = await getAllActivity();
-    console.log("getAllActivity:", activities)
+    // const activities = await getAllActivity();
+    // console.log("getAllActivity:", activities)
 
-    const routines = await getAllRoutines();
-    console.log("getAllRoutines:", routines)
+   
+    // const routines = await getAllRoutines();
+    // console.log("getAllRoutines:", routines)
 
-    const routineActivity = await getAllRoutineActivity();
-    console.log("getAllRoutineActivity:", routineActivity)
+    // const routineActivity = await getAllRoutineActivity();
+    // console.log("getAllRoutineActivity:", routineActivity)
 
-    const routinesbyUser = await getAllRoutinesbyUser({username: 'albert'});
-    console.log('getAllRoutinesbyUser', routinesbyUser)
+    // const routinesbyUser = await getAllRoutinesbyUser({username: 'albert'});
+    // console.log('getAllRoutinesbyUser', routinesbyUser)
 
-    // const publicRoutinebyUser = await getPublicRoutinesbyUser('albert');
-    // console.log('getPublicRoutinesbyUser', publicRoutinebyUser)
+    const publicRoutinebyUser = await getPublicRoutinesbyUser('albert');
+    console.log('getPublicRoutinesbyUser', publicRoutinebyUser)
+
+    const allPublicRoutines = await getAllPublicRoutines()
+    console.log('getAllPublicRoutines', allPublicRoutines)
+    
+    // const updatedActivity = await updateActivity({
+    //   id: activities[0].id,
+    //   name: 'lunges',
+    //   description: 'take big steps'
+    // });
+    // console.log("updateActivity:", updatedActivity )
+
+    const publicRoutinebyActivity = await getPublicRoutinesbyActivity([0]);
+    console.log('getPublicRoutinesbyActivity: ', publicRoutinebyActivity)
+
+
 
     console.log("Finished database tests!");
 
@@ -253,3 +272,5 @@ async function init () {
   }
 }
 init();
+
+

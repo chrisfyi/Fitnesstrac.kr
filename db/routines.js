@@ -8,6 +8,7 @@ const {
 
 const {
   getActivitiesbyRoutineId,
+  getAllActivity,
 } = require('./activities')
 
 async function createRoutines({
@@ -82,41 +83,71 @@ async function getAllRoutinesbyUser({username}) {
       routine.activities = activities
     }
    
-
-  
     return rows;
   } catch (error) {
     console.error(error);
   }
 }
 
-// this was in the function above
-// JOIN routine_activities ON routine_activities."routineId" = routines.id
-// WHERE users.id = 1;
-
 async function getPublicRoutinesbyUser(username) {
   
-  // const publicRoutines = getAllPublicRoutines()
-  //  get public routines, get routines by user
-  console.log(username)
   try {
+
+    const user = await getUserbyUsername(username)
+
     const { rows } = await client.query(`
     SELECT * 
     FROM routines
-    WHERE routines."creatorId" = 
-    WHERE public = true AND "creatorId" >= 1 ; 
-     
-      `);
+    WHERE routines."creatorId" = $1 AND public = true; 
+     `, [user.id]);
 
-      
+     for(let routine of rows) {
 
+      const {rows: activities} = await client.query(`
+      SELECT *
+      FROM activities
+      JOIN routine_activities ON routine_activities."activityId" = activities.id
+      WHERE "routineId" = $1
+      `, [routine.id])
+      routine.activities = activities
+    }
+   
     return rows;
   } catch (error) {
     throw error;
   }
 }
 
-// 
+async function getPublicRoutinesbyActivity(id) {
+  
+  try {
+
+    // const activity = await getAllActivity()
+    // const public = await getAllPublicRoutines(id)
+
+    const { rows } = await client.query(`
+    SELECT * 
+    FROM routines
+    WHERE public = true; 
+     `, [id]);
+
+    
+ for(let routine of rows) {
+
+      const {rows: activities} = await client.query(`
+      SELECT *
+      FROM activities
+      JOIN routine_activities ON routine_activities."activityId" = activities.id
+      WHERE "routineId" = $1
+      `, [routine.id])
+      routine.activities = activities
+    }
+   
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+}
 
 // async function updateUser(id, fields = {}) {
 //   // build the set string
@@ -150,4 +181,5 @@ module.exports = {
     getAllRoutinesbyUser,
     getAllPublicRoutines,
     getPublicRoutinesbyUser,
+    getPublicRoutinesbyActivity
  }
