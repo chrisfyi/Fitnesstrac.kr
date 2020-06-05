@@ -128,7 +128,9 @@ async function getPublicRoutinesbyActivity(id) {
     const { rows } = await client.query(`
     SELECT * 
     FROM routines
-    WHERE public = true; 
+    JOIN routine_activities ON routine_activities."routineId" = routines.id
+    WHERE "activityId" = $1 
+    AND public = true; 
      `, [id]);
 
     
