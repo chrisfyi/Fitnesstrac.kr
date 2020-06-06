@@ -16,6 +16,8 @@ async function createRoutineActivity({
       
       RETURNING "routineId", "activityId", count, duration;
         `, [ routineId, activityId, count, duration]);
+
+        return rows;
     } catch (error) {
       throw error;
     }
@@ -35,54 +37,98 @@ async function createRoutineActivity({
   //     RETURNING "routineId", "activityId", count, duration;
   //       `, [ routineId, activityId, count, duration]);
   //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+
+
+ //// *****NEEED TO FINISH WRITING THIS FUNCTION*****
+
+  async function updateRoutineActivity(fields = {}) {
+    const id = fields.id
+    delete fields.id
+
+      const setString = Object.keys(fields).map(
+        (key, index) => `"${ key }"=$${ index +1}`
+      ).join(', ');
+      console.log (fields)
+    try {
+      const {rows: result} = await client.query(`
+      UPDATE routine_activities
+      SET ${ setString }
+      WHERE id=${ id }
+      RETURNING *;
+      `,Object.values(fields));
+
+      return result;
+  
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // async function updateRoutine(fields = {}) {
+  //   // build the set string
+  // const id = fields.id
+  // delete fields.id
+  
+  //   const setString = Object.keys(fields).map(
+  //     (key, index) => `"${ key }"=$${ index + 1 }`
+  //   ).join(', ');
+  //   console.log(fields)
+  
+  //   console.log(setString)
+  //   // return early if this is called without fields
+  //   if (setString.length === 0) {
+  //     return;
+  //   }
+  
+  //   try {
+  //     const {rows: result} = await client.query(`
+  //       UPDATE routines
+  //       SET ${ setString }
+  //       WHERE id=${ id }
+  //       RETURNING *;
+  //     `, Object.values(fields));
+  
+  //     return result;
+  //   } catch (error) {
   //     throw error;
   //   }
   // }
 
-  async function updateRoutineActivity(id, {
-    count,
-    curation,
-  }) {
-    try {
-  
-    } catch (error) {
-      throw error;
-    }
-  }
-
   async function getAllRoutineActivity() {
-    const { rows } = await client.query(`SELECT * FROM routine_activities;`);
+    const { rows } = await client.query(`
+    SELECT * 
+    FROM routine_activities;
+    `);
 
     return rows;
 }
 
-// async function updateUser(id, fields = {}) {
-//   // build the set string
-//   const setString = Object.keys(fields).map(
-//     (key, index) => `"${ key }"=$${ index + 1 }`
-//   ).join(', ');
+async function destroyRoutineActivity(id) {
+  console.log('Entering destroyRoutineActivity');
+  console.log('<<<<<<<< destroyRoutineActivity', id);
+  try {
+    const {rows: [routine]} = await client.query(`
+          DELETE FROM routine_activities
+          WHERE "routineId" = ${id}
+          RETURNING *;
+      `);
 
-//   // return early if this is called without fields
-//   if (setString.length === 0) {
-//     return;
-//   }
+      console.log('Routine Activity deleted: ', routine);
 
-//   try {
-//     const result = await client.query(`
-//       UPDATE users
-//       SET ${ setString }
-//       WHERE id=${ id }
-//       RETURNING *;
-//     `, Object.values(fields));
+      return routine;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
-//     return result;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+
 
 module.exports = {
     createRoutineActivity,
-    updateRoutineActivity,
     getAllRoutineActivity,
+    destroyRoutineActivity,
+    updateRoutineActivity
  }

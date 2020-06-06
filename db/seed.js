@@ -17,18 +17,21 @@ const {
 } = require('./activities')
 
 const {
-  createRoutines,
+  createRoutine,
   getAllRoutines,
   getAllRoutinesbyUser,
-  getAllPublicRoutines,
+  getPublicRoutines,
   getPublicRoutinesbyUser,
   getPublicRoutinesbyActivity,
-  updateRoutine
+  updateRoutine,
+  destroyRoutine,
 } = require('./routines')
 
 const {
   createRoutineActivity,
   getAllRoutineActivity,
+  destroyRoutineActivity,
+  updateRoutineActivity,
 } = require('./routine_activities')
   
 
@@ -138,7 +141,7 @@ async function createInitialRoutines() {
     const [ user ] = await getAllUsers();
 
     console.log('>>>>>>',user)
-    await createRoutines({
+    await createRoutine({
       creatorId: user.id,
       public: true,
       name: "`First Routine`",
@@ -146,14 +149,14 @@ async function createInitialRoutines() {
     });
 
 
-    await createRoutines({
+    await createRoutine({
       creatorId: user.id,
       public: false,
       name: "`Second Routine`",
       goal: "This is my goal."
     });
 
-    await createRoutines({
+    await createRoutine({
       creatorId: user.id,
       public: true,
       name: "`Third Routine`",
@@ -184,14 +187,14 @@ async function createInitialRoutineActivities() {
     });
 
     await createRoutineActivity({
-      routineId,
+      routineId: 2,
       activityId: 2,
       count: 10,
       duration: 10000 
     });
 
     await createRoutineActivity({
-      routineId,
+      routineId: 3,
       activityId: 3,
       count: 10,
       duration: 10000 
@@ -241,8 +244,8 @@ async function testDB() {
     const publicRoutinebyUser = await getPublicRoutinesbyUser('albert');
     console.log('getPublicRoutinesbyUser', publicRoutinebyUser)
 
-    const allPublicRoutines = await getAllPublicRoutines()
-    console.log('getAllPublicRoutines', allPublicRoutines)
+    const allPublicRoutines = await getPublicRoutines()
+    console.log('getPublicRoutines', allPublicRoutines)
     
     const updatedActivity = await updateActivity({
       id: activities[0].id,
@@ -263,6 +266,20 @@ async function testDB() {
     });
     console.log('updateRoutine', updateRoutines)
 
+    const updateroutineactivity = await updateRoutineActivity({
+      id: 1,
+      routineId: 1,
+      activityId: 2,
+      duration: 200,
+      count: 5,
+    });
+    console.log('update RoutineActivity', updateroutineactivity);
+
+    const destroyroutines = await destroyRoutine(1)
+    console.log ('destroyRoutines', destroyroutines);
+
+    const destroyroutineactivity = await destroyRoutineActivity(2)
+    console.log ('destroying routing activities', destroyroutineactivity);
 
 
     console.log("Finished database tests!");

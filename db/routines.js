@@ -11,7 +11,7 @@ const {
   getAllActivity,
 } = require('./activities')
 
-async function createRoutines({
+async function createRoutine({
     creatorId, 
     public,
     name, 
@@ -31,17 +31,6 @@ async function createRoutines({
     }
   }
 
-  async function updateRoutines(id, {
-    public,
-    name,
-    goal,
-  }) {
-    try {
-  
-    } catch (error) {
-      throw error;
-    }
-  }
 
   async function getAllRoutines() {
     const { rows } = await client.query(`SELECT * FROM routines;`);
@@ -60,7 +49,7 @@ async function createRoutines({
     return rows;
 }
 
-async function getAllPublicRoutines() {
+async function getPublicRoutines() {
   const { rows } = await client.query(`
       SELECT * FROM routines
       WHERE public = true
@@ -145,7 +134,7 @@ async function getPublicRoutinesbyActivity(id) {
   try {
 
     // const activity = await getAllActivity()
-    // const public = await getAllPublicRoutines(id)
+    // const public = awai(id)
 
     const { rows } = await client.query(`
     SELECT * 
@@ -205,13 +194,35 @@ delete fields.id
   }
 }
 
+async function destroyRoutine(id) {
+  console.log('Begin destroyRoutine');
+  console.log('<<<<<<<<', id);
+  try {
+      await client.query(`
+          DELETE FROM routine_activities
+          WHERE "routineId" = ${id};
+      `);
+
+      const {rows: [routine]} = await client.query(`
+          DELETE FROM routines
+          WHERE id = ${id}
+          RETURNING *;
+      `);
+      console.log('Routine deleted: ', routine);
+
+      return routine;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 module.exports = {
-    createRoutines,
-    updateRoutines,
+    createRoutine,
+    updateRoutine,
     getAllRoutines,
     getAllRoutinesbyUser,
-    getAllPublicRoutines,
+    getPublicRoutines,
     getPublicRoutinesbyUser,
     getPublicRoutinesbyActivity,
-    updateRoutine
+    destroyRoutine
  }
